@@ -1,0 +1,34 @@
+/*
+ * This protobuf file contains the definition of the public API endpoints as
+ * well as messages.
+ */
+syntax = "proto3";
+
+package beaconProto;
+
+option go_package = "../beacon";
+
+import "google/api/annotations.proto";
+
+service Beacon {
+    rpc Commits(CommitmentsRequest) returns (CommitmentsResponse) {
+        option (google.api.http) = {
+            get: "/api/commits"
+            additional_bindings {
+                get: "/api/commits/{round}"
+            }
+        };
+    }
+}
+
+message CommitmentsRequest {
+    // If round == 0, then the response will contain the last.
+    uint64 round = 1;
+}
+
+message CommitmentsResponse {
+    uint64 round = 1;
+    bytes commits = 2;
+    bytes signature = 3;
+    bytes key = 4;
+}
